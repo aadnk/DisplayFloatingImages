@@ -30,7 +30,7 @@ public class DisplayFloatingImages extends JavaPlugin implements Listener {
 	private BufferedImage image;
 
 	private Map<Player, BukkitTask> playerTask = Maps.newHashMap();
-	
+
 	@Override
 	public void onEnable() {
 		// Must be placed in the data folder
@@ -44,54 +44,56 @@ public class DisplayFloatingImages extends JavaPlugin implements Listener {
 		}
 		getServer().getPluginManager().registerEvents(this, this);
 	}
-	
+
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		stopTask(e.getPlayer());
 	}
-		
+
 	/**
 	 * Stop a task associated with the given player.
+	 * 
 	 * @param player - the player.
 	 * @return TRUE if a task was stopped, FALSE otherwise.
 	 */
 	private boolean stopTask(Player player) {
-		BukkitTask task =  playerTask.remove(player);
-		
+		BukkitTask task = playerTask.remove(player);
+
 		if (task != null) {
 			task.cancel();
 			return true;
 		}
 		return false;
 	}
-	
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            final Player player = (Player) sender;
 
-            if (message != null) {
-            	if (!stopTask(player)) {
-            		final Location loc = player.getLocation().add(0, 5, 0);
-            		message.sendToPlayer(player, loc);
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (sender instanceof Player) {
+			final Player player = (Player) sender;
 
-            		playerTask.put(player, getServer().getScheduler().runTaskTimer(this, new Runnable() {
-						@Override
-						public void run() {
-							loc.add(0, 0.02, 0);
-							message.move(player, loc);
-						}
-					}, 1, 1));
-            		
-            	} else {
-            		message.clear(player);
-            		stopTask(player);
-            	}
-            } else {
-            	sender.sendMessage(ChatColor.RED + "No image loaded.");
-            }
-        }
-        return true;
-    }
+			if (message != null) {
+				if (!stopTask(player)) {
+					final Location loc = player.getLocation().add(0, 5, 0);
+					message.sendToPlayer(player, loc);
+
+					playerTask.put(player,
+							getServer().getScheduler().runTaskTimer(this, new Runnable() {
+								@Override
+								public void run() {
+									loc.add(0, 0.02, 0);
+									message.move(player, loc);
+								}
+							}, 1, 1));
+
+				} else {
+					message.clear(player);
+					stopTask(player);
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No image loaded.");
+			}
+		}
+		return true;
+	}
 
 }

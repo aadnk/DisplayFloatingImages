@@ -32,6 +32,7 @@ public abstract class AbstractPacket {
 
 	/**
 	 * Constructs a new strongly typed wrapper for the given packet.
+	 * 
 	 * @param handle - handle to the raw packet data.
 	 * @param type - the packet type.
 	 */
@@ -40,22 +41,24 @@ public abstract class AbstractPacket {
 		if (handle == null)
 			throw new IllegalArgumentException("Packet handle cannot be NULL.");
 		if (!Objects.equal(handle.getType(), type))
-			throw new IllegalArgumentException(
-					handle.getHandle() + " is not a packet of type " + type);
-		
+			throw new IllegalArgumentException(handle.getHandle() + " is not a packet of type "
+					+ type);
+
 		this.handle = handle;
 	}
 
 	/**
 	 * Retrieve a handle to the raw packet data.
+	 * 
 	 * @return Raw packet data.
 	 */
 	public PacketContainer getHandle() {
 		return handle;
 	}
-	
+
 	/**
 	 * Send the current packet to the given receiver.
+	 * 
 	 * @param receiver - the receiver.
 	 * @throws RuntimeException If the packet cannot be sent.
 	 */
