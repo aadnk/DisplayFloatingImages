@@ -3,7 +3,7 @@
   <groupId>com.comphenix.example</groupId>
   <artifactId>DisplayFloatingImage</artifactId>
   <version>0.0.1</version>
-  <name>$DisplayFloatingImage</name>
+  <name>DisplayFloatingImage</name>
   <description>Display a floating image.</description>
   
   <properties>
