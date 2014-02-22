@@ -5,12 +5,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 /**
  * User: bobacadodl Date: 1/25/14 Time: 10:28 PM
  */
 public class ImageMessage {
+	private final static char TRANSPARENT_CHAR = ' ';
+	
 	private final Color[] colors = {
 			new Color(0, 0, 0), 
 			new Color(0, 0, 170), 
@@ -77,7 +81,7 @@ public class ImageMessage {
 		for (int x = 0; x < resized.getWidth(); x++) {
 			for (int y = 0; y < resized.getHeight(); y++) {
 				int rgb = resized.getRGB(x, y);
-				ChatColor closest = getClosestChatColor(new Color(rgb));
+				ChatColor closest = getClosestChatColor(new Color(rgb, true));
 				chatImg[x][y] = closest;
 			}
 		}
@@ -91,7 +95,12 @@ public class ImageMessage {
 
 			for (int x = 0; x < colors.length; x++) {
 				final ChatColor color = colors[x][y];
-				line.append(color.toString()).append(imgchar);
+				
+				// Handle transparency
+				if (color != null)
+					line.append(color.toString()).append(imgchar);
+				else
+					line.append(TRANSPARENT_CHAR);
 			}
 			lines[y] = line.append(ChatColor.RESET).toString();
 		}
@@ -99,15 +108,13 @@ public class ImageMessage {
 	}
 
 	private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
-		BufferedImage resizedImage = new BufferedImage(width, height, 6);
-		Graphics2D g = resizedImage.createGraphics();
-		g.setComposite(AlphaComposite.Src);
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawImage(originalImage, 0, 0, width, height, null);
-		g.dispose();
-		return resizedImage;
+		AffineTransform af = new AffineTransform();
+		af.scale(
+			width / (double)originalImage.getWidth(), 
+			height / (double)originalImage.getHeight());
+
+		AffineTransformOp operation = new AffineTransformOp(af, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		return operation.filter(originalImage, null);
 	}
 
 	private double getDistance(Color c1, Color c2) {
@@ -129,8 +136,9 @@ public class ImageMessage {
 	}
 
 	private ChatColor getClosestChatColor(Color color) {
-		if (color.getAlpha() < 128)
-			return ChatColor.BLACK;
+		if (color.getAlpha() < 128) {
+			return null;
+		}
 
 		int index = 0;
 		double best = -1;
