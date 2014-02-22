@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.comphenix.example</groupId>
+  <artifactId>DisplayFloatingImage</artifactId>
+  <version>0.0.1</version>
+  <name>$DisplayFloatingImage</name>
+  <description>Display a floating image.</description>
+  
+  <properties>
+    <project.build.sourceEncoding>cp1252</project.build.sourceEncoding>
+  </properties>
+  
+  <repositories>
+    <repository>
+      <id>bukkit-rep</id>
+      <url>http://repo.bukkit.org/content/groups/public</url>
+    </repository>
+    <repository>
+      <id>comphenix-rep</id>
+      <name>Comphenix Maven Releases</name>
+      <url>http://repo.comphenix.net/content/groups/public</url>
+    </repository>
+    <repository>
+      <id>md_5-rep</id>
+      <name>md_5 Maven Snapshots</name>
+      <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+  
+  <pluginRepositories>
+  	<pluginRepository>
+      <id>comphenix-rep</id>
+      <name>Comphenix Maven Releases</name>
+      <url>http://repo.comphenix.net/content/groups/public</url>
+  	</pluginRepository>
+  </pluginRepositories>
+  
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+	<dependency>
+  		<groupId>org.bukkit</groupId>
+  		<artifactId>craftbukkit</artifactId>
+  		<version>1.7.2-R0.1-SNAPSHOT</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+    	<groupId>com.comphenix.protocol</groupId>
+    	<artifactId>ProtocolLib</artifactId>
+    	<version>3.1.2</version>
+  	</dependency> 
+  </dependencies>
+</project>

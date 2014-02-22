@@ -1,0 +1,13 @@
+name: ExamplePlugin
+version: 0.0.2-SNAPSHOT
+description: A simple test plugin.
+author: Comphenix
+website: http://www.comphenix.net/ExamplePlugin
+
+main: com.comphenix.example.DisplayFloatingImages
+database: false
+
+commands:
+   toggleimage:
+      description: Toggle a floating image.
+      usage: /<command> [player]
