@@ -64,6 +64,14 @@ public class NameTagMessage extends ImageMessage {
 	public Location getLocation() {
 		return location;
 	}
+	
+	/**
+	 * Retrieve the underlying name tag spawner.
+	 * @return The spawner.
+	 */
+	public NameTagSpawner getSpawner() {
+		return spawner;
+	}
 
 	/**
 	 * Retrieve the default amount of meters in the y-axis between each name

@@ -1,5 +1,5 @@
-name: ExamplePlugin
-version: 0.0.2-SNAPSHOT
+name: DisplayFloatingImages
+version: 0.0.1-SNAPSHOT
 description: A simple test plugin.
 author: Comphenix
 website: http://www.comphenix.net/ExamplePlugin

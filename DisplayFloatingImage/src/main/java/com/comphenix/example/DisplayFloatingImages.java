@@ -18,6 +18,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.comphenix.example.nametags.GifAnimator;
+import com.comphenix.example.nametags.GifImageMessage;
 import com.comphenix.example.nametags.ImageChar;
 import com.comphenix.example.nametags.NameTagMessage;
 import com.google.common.collect.Maps;
@@ -26,19 +28,17 @@ import com.google.common.collect.Maps;
 //   http://imgur.com/gF0qyzj
 
 public class DisplayFloatingImages extends JavaPlugin implements Listener {
-	private NameTagMessage message;
-	private BufferedImage image;
-
-	private Map<Player, BukkitTask> playerTask = Maps.newHashMap();
+	private GifImageMessage gif;
+	private Map<Player, GifAnimator> playerTask = Maps.newHashMap();
 
 	@Override
 	public void onEnable() {
 		// Must be placed in the data folder
-		URI uri = URI.create("http://www.gstatic.com/webp/gallery3/2.png");
-
+		//URI uri = URI.create("http://www.gstatic.com/webp/gallery3/2.png");
+		URI uri = URI.create("http://fc02.deviantart.net/fs71/f/2012/126/a/8/low_res_hl1_explosion_gif__cheesy___by_theloyalrainbowdash-d4yoj2u.gif");
+		
 		try {
-			image = ImageIO.read(uri.toURL());
-			message = new NameTagMessage(image, 30, ImageChar.BLOCK.getChar());
+			gif = new GifImageMessage(uri, 30, ImageChar.BLOCK.getChar());
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot read image " + uri, e);
 		}
@@ -57,11 +57,10 @@ public class DisplayFloatingImages extends JavaPlugin implements Listener {
 	 * @return TRUE if a task was stopped, FALSE otherwise.
 	 */
 	private boolean stopTask(Player player) {
-		BukkitTask task = playerTask.remove(player);
+		GifAnimator task = playerTask.remove(player);
 
 		if (task != null) {
-			task.cancel();
-			return true;
+			return task.stop();
 		}
 		return false;
 	}
@@ -71,22 +70,15 @@ public class DisplayFloatingImages extends JavaPlugin implements Listener {
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 
-			if (message != null) {
+			if (gif != null) {
 				if (!stopTask(player)) {
-					final Location loc = player.getLocation().add(0, 5, 0);
-					message.sendToPlayer(player, loc);
-
-					playerTask.put(player,
-							getServer().getScheduler().runTaskTimer(this, new Runnable() {
-								@Override
-								public void run() {
-									loc.add(0, 0.02, 0);
-									message.move(player, loc);
-								}
-							}, 1, 1));
-
+					GifAnimator animator = new GifAnimator(this, player, gif);
+					
+					// Start and save animator
+					animator.start();
+					playerTask.put(player, animator);
+				
 				} else {
-					message.clear(player);
 					stopTask(player);
 				}
 			} else {
